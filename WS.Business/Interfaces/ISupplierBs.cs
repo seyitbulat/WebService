@@ -4,9 +4,12 @@ namespace WS.Business.Interfaces
 {
     public interface ISupplierBs
     {
-        List<Supplier> GetSuppliers();
-        List<Supplier> GetByCity(string city);
-        List<Supplier> GetByCountry(string country);
-        List<Supplier> GetByCompanyName(string companyName);
+        Supplier GetById(int id, params string[] includeList);
+        List<Supplier> GetSuppliers(params string[] includeList);
+        List<Supplier> GetByCity(string city, params string[] includeList);
+        List<Supplier> GetByCountry(string country, params string[] includeList);
+        List<Supplier> GetByCompanyName(string companyName, params string[] includeList);
+
+        void SaveNewSupplier(Supplier supplier);
     }
 }

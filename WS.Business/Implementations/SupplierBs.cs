@@ -13,24 +13,34 @@ namespace WS.Business.Implementations
             _repo = repo;
         }
 
-        public List<Supplier> GetByCity(string city)
+        public Supplier GetById(int id, params string[] includeList)
         {
-            return _repo.GetByCity(city);
+            return _repo.GetById(id, includeList);
         }
 
-        public List<Supplier> GetByCompanyName(string companyName)
+        public List<Supplier> GetByCity(string city, params string[] includeList)
         {
-            return _repo.GetByCompanyName(companyName);
+            return _repo.GetByCity(city,includeList);
         }
 
-        public List<Supplier> GetByCountry(string country)
+        public List<Supplier> GetByCompanyName(string companyName, params string[] includeList)
         {
-            return _repo.GetByCountry(country);
+            return _repo.GetByCompanyName(companyName, includeList);
         }
 
-        public List<Supplier> GetSuppliers()
+        public List<Supplier> GetByCountry(string country, params string[] includeList)
         {
-            return _repo.GetAll();
+            return _repo.GetByCountry(country, includeList);
+        }
+
+        public List<Supplier> GetSuppliers(params string[] includeList)
+        {
+            return _repo.GetAll(includeList: includeList);
+        }
+
+        public void SaveNewSupplier(Supplier supplier)
+        {
+            _repo.Insert(supplier);
         }
     }
 }
