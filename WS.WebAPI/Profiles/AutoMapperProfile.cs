@@ -16,7 +16,14 @@ namespace WS.WebAPI.Profiles
             // Product Entity
             CreateMap<Product, ProductGetDto>()
                 .ForMember(dest => dest.CategoryName,
-                           opt => opt.MapFrom(src => src.Category.CategoryName));
+                           opt => opt.MapFrom(src => src.Category.CategoryName))
+                .ForMember(dest => dest.CompanyName,
+                            opt => opt.MapFrom(src => src.Supplier.CompanyName))
+                .ForMember(dest => dest.ContactName,
+                            opt => opt.MapFrom(src => src.Supplier.ContactName))
+                .ForMember(dest => dest.Phone,
+                            opt => opt.MapFrom(src => src.Supplier.Phone));
+
             CreateMap<ProductPostDto, Product>();
 
             // Category Entity

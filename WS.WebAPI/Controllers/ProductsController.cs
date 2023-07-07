@@ -24,7 +24,7 @@ namespace WS.WebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var product = _productBs.GetById(id);
+            var product = _productBs.GetById(id, "Category", "Supplier");
             if (product == null)
             {
                 return NotFound();
@@ -78,7 +78,7 @@ namespace WS.WebAPI.Controllers
             //return NotFound();
             #endregion
             #region MAPPING YONTEM 3
-            var products = _productBs.GetProducts("Category");
+            var products = _productBs.GetProducts("Category", "Supplier");
 
             if (products.Count > 0)
             {
@@ -92,7 +92,7 @@ namespace WS.WebAPI.Controllers
         [HttpGet("getbyprice")]
         public IActionResult GetByPrice([FromQuery] decimal min, [FromQuery] decimal max)
         {
-            var products = _productBs.GetByPriceRange(min, max, "Category");
+            var products = _productBs.GetByPriceRange(min, max, "Category", "Supplier");
 
             if (products.Count > 0)
             {
@@ -105,7 +105,7 @@ namespace WS.WebAPI.Controllers
         [HttpGet("getbystock")]
         public IActionResult GetByStock([FromQuery] short min, [FromQuery] short max)
         {
-            var products = _productBs.GetByStockRange(min, max, "Category");
+            var products = _productBs.GetByStockRange(min, max, "Category", "Supplier");
             if (products.Count > 0)
             {
                 var returnList = _mapper.Map<List<ProductGetDto>>(products);
