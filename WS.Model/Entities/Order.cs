@@ -24,9 +24,9 @@ namespace WS.Model.Entities
         public string? ShipPostalCode { get; set; }
         public string? ShipCounty { get; set; }
 
-        public OrderDetail orderDetail { get; set; }
-        public Shipper shipper { get; set; }
-        public Customer customer { get; set; }
-        public Employee employee { get; set; }
+        public List<OrderDetail>? orderDetails { get; set; }
+        public Shipper? shipper { get; set; }
+        public Customer? customer { get; set; }
+        public Employee? employee { get; set; }
     }
 }

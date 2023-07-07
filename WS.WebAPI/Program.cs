@@ -33,6 +33,9 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IEmployeeBs, EmployeeBs>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
+builder.Services.AddScoped<IShipperBs, ShipperBs>();
+builder.Services.AddScoped<IShipperRepository, ShipperRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

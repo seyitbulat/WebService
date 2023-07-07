@@ -9,12 +9,12 @@ namespace WS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SuppliersController : ControllerBase
+    public class SupplierssController : ControllerBase
     {
         private readonly ISupplierBs _supplierBs;
         private readonly IMapper _mapper;
 
-        public SuppliersController(ISupplierBs supplierBs, IMapper mapper)
+        public SupplierssController(ISupplierBs supplierBs, IMapper mapper)
         {
             _supplierBs = supplierBs;
             _mapper = mapper;

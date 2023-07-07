@@ -9,6 +9,6 @@ namespace WS.Model.Entities
         public decimal? UnitPrice { get; set; }
         public short? Quantity { get; set; }
 
-        public Product? product { get; set; }
+        public List<Product>? products { get; set; }
     }
 }

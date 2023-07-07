@@ -3,6 +3,7 @@ using WS.Model.Dtos.Category;
 using WS.Model.Dtos.Customer;
 using WS.Model.Dtos.Employee;
 using WS.Model.Dtos.Product;
+using WS.Model.Dtos.Shipper;
 using WS.Model.Dtos.Supplier;
 using WS.Model.Entities;
 
@@ -41,6 +42,10 @@ namespace WS.WebAPI.Profiles
             // Supplier Entity
             CreateMap<Supplier, SupplierGetDto>();
             CreateMap<SupplierPostDto, Supplier>();
+
+            // Shipper Entity
+            CreateMap<Shipper, ShipperGetDto>();
+            CreateMap<ShipperPostDto, Shipper>();
         }
     }
 }
