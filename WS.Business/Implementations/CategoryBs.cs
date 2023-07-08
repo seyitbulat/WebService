@@ -1,5 +1,8 @@
-﻿using WS.Business.Interfaces;
+﻿using AutoMapper;
+using Infrastructure.Utilities.ApiResponses;
+using WS.Business.Interfaces;
 using WS.DataAccsess.Interfaces;
+using WS.Model.Dtos.Category;
 using WS.Model.Entities;
 
 namespace WS.Business.Implementations
@@ -7,30 +10,52 @@ namespace WS.Business.Implementations
     public class CategoryBs : ICategoryBs
     {
         private readonly ICategoryRepository _repo;
+        private readonly IMapper _mapper;
 
-        public CategoryBs(ICategoryRepository repo)
+        public CategoryBs(ICategoryRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
-        public void AddCategory(Category category)
+        public ApiResponse<Category> AddCategory(CategoryPostDto dto)
         {
+            var category = _mapper.Map<Category>(dto);
             _repo.Insert(category);
+            return ApiResponse<Category>.Success(200, category);
         }
 
-        public List<Category> GetByDescription(string desc, params string[] includeList)
+        public ApiResponse<List<CategoryGetDto>> GetByDescription(string desc, params string[] includeList)
         {
-            return _repo.GetByDescription(desc, includeList);
+            var categories = _repo.GetByDescription(desc, includeList);
+            if(categories.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<CategoryGetDto>>(categories);
+                return ApiResponse<List<CategoryGetDto>>.Success(200, dtoList);
+            }
+            return null;
         }
 
-        public Category GetById(int id, params string[] includeList)
+        public ApiResponse<CategoryGetDto> GetById(int id, params string[] includeList)
         {
-            return _repo.GetById(id, includeList);
+            var category = _repo.GetById(id, includeList);
+            if (category != null)
+            {
+                var dto = _mapper.Map<CategoryGetDto>(category);
+                return ApiResponse<CategoryGetDto>.Success(200, dto);
+            }
+            return null;
         }
 
-        public List<Category> GetCategories(params string[] includeList)
+        public ApiResponse<List<CategoryGetDto>> GetCategories(params string[] includeList)
         {
-            return _repo.GetAll(includeList: includeList);
+            var categories = _repo.GetAll(includeList: includeList);
+            if (categories.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<CategoryGetDto>>(categories);
+                return ApiResponse<List<CategoryGetDto>>.Success(200, dtoList);
+            }
+            return null;
         }
     }
 }

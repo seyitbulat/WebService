@@ -8,6 +8,6 @@ namespace WS.Model.Dtos.Category
         public string CategoryName { get; set; }
         public string? Description { get; set; }
 
-        public List<WS.Model.Entities.Product>? products { get; set; }
+        //public List<WS.Model.Entities.Product>? products { get; set; }
     }
 }

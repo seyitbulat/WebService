@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Infrastructure.Utilities.ApiResponses;
 using Microsoft.AspNetCore.Mvc;
 using WS.Business.Interfaces;
 using WS.Model.Dtos.Category;
+using WS.Model.Dtos.Product;
 using WS.Model.Entities;
 
 namespace WS.WebAPI.Controllers
@@ -11,59 +13,55 @@ namespace WS.WebAPI.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryBs _categoryBs;
-        private readonly IMapper _mapper;
 
-        public CategoriesController(ICategoryBs categoryBs, IMapper mapper)
+
+        public CategoriesController(ICategoryBs categoryBs)
         {
             _categoryBs = categoryBs;
-            _mapper = mapper;
         }
 
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type= typeof(ApiResponse<ProductGetDto>))]
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var category = _categoryBs.GetById(id);
-            if(category == null)
-                return NotFound();
+            var response = _categoryBs.GetById(id);
+            //if(category == null)
+            //    return NotFound();
 
-            var dto = _mapper.Map<CategoryGetDto>(category);
-            return Ok(dto);
+            return Ok(response);
         }
-
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
         [HttpGet]
         public IActionResult GetCategories()
         {
-            List<Category> categories = _categoryBs.GetCategories();
-            if(categories.Count > 0)
-            {
-                var returnList = _mapper.Map<List<CategoryGetDto>>(categories);
-                return Ok(returnList);
-            }
-            return BadRequest();
+            var response = _categoryBs.GetCategories();
+
+            return Ok(response);
         }
 
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
         [HttpGet("GetByDescription")]
         public IActionResult GetByDescription([FromQuery] string desc)
         {
-            List<Category> categories = _categoryBs.GetByDescription(desc);
-            if(categories.Count > 0)
-            {
-                var returnList = _mapper.Map<List<CategoryGetDto>>(categories);
-                return Ok(returnList);
-            }
-            return BadRequest();
-        }
+            var response = _categoryBs.GetByDescription(desc);
 
+            return Ok(response);
+
+        }
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Product>))]
         [HttpPost]
         public IActionResult SaveNewCategory([FromBody] CategoryPostDto dto)
         {
-            if(dto == null)
+            if (dto == null)
                 return BadRequest("{error: 'Gerekli veri gonderilmedi'} ");
 
-            var category = _mapper.Map<Category>(dto);
-            _categoryBs.AddCategory(category);
+            var response = _categoryBs.AddCategory(dto);
 
-            return CreatedAtAction(nameof(GetById), new Category { CategoryId=category.CategoryId },category);
+            return Ok(response);
         }
     }
 }
