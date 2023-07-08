@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Infrastructure.Model;
+using Infrastructure.Utilities.ApiResponses;
 using Microsoft.AspNetCore.Mvc;
 using WS.Business.Interfaces;
 using WS.Model.Dtos.Product;
@@ -12,27 +13,28 @@ namespace WS.WebAPI.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductBs _productBs;
-        private readonly IMapper _mapper;
 
-        public ProductsController(IProductBs productBs, IMapper mapper)
+
+        public ProductsController(IProductBs productBs)
         {
             _productBs = productBs;
-            _mapper = mapper;
         }
 
-
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ProductGetDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var product = _productBs.GetById(id, "Category", "Supplier");
-            if (product == null)
-            {
-                return NotFound();
-            }
-            var dto = _mapper.Map<ProductGetDto>(product);
-            return Ok(dto);
+            var response = _productBs.GetById(id, "Category", "Supplier");
+           // if (response == null)
+            //    return NotFound();
+            return Ok(response);
         }
 
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet]
         public IActionResult GetProducts()
         {
@@ -78,40 +80,40 @@ namespace WS.WebAPI.Controllers
             //return NotFound();
             #endregion
             #region MAPPING YONTEM 3
-            var products = _productBs.GetProducts("Category", "Supplier");
+            var response = _productBs.GetProducts("Category", "Supplier");
+            return Ok(response);
 
-            if (products.Count > 0)
-            {
-                var returnList = _mapper.Map<List<ProductGetDto>>(products);
-                return Ok(returnList);
-            }
-            return BadRequest();
+            //if (products.Count > 0)
+            //{
+            //    return Ok(response);
+            //}
+            //return NotFound();
             #endregion
         }
 
         [HttpGet("getbyprice")]
         public IActionResult GetByPrice([FromQuery] decimal min, [FromQuery] decimal max)
         {
-            var products = _productBs.GetByPriceRange(min, max, "Category", "Supplier");
-
-            if (products.Count > 0)
-            {
-                var returnList = _mapper.Map<List<ProductGetDto>>(products);
-                return Ok(returnList);
-            }
-            return BadRequest();
+            var response = _productBs.GetByPriceRange(min, max, "Category", "Supplier");
+            return Ok(response);
+            //if (products.Count > 0)
+            //{
+            //    return Ok(products);
+            //}
+            //return NotFound();
         }
 
         [HttpGet("getbystock")]
         public IActionResult GetByStock([FromQuery] short min, [FromQuery] short max)
         {
-            var products = _productBs.GetByStockRange(min, max, "Category", "Supplier");
-            if (products.Count > 0)
-            {
-                var returnList = _mapper.Map<List<ProductGetDto>>(products);
-            }
-               
-            return NotFound();
+            var response = _productBs.GetByStockRange(min, max, "Category", "Supplier");
+            return Ok(response);
+            //if (products.Count > 0)
+            //{
+            //    return Ok(products);
+            //}
+
+            //return NotFound();
         }
 
         [HttpPost]
@@ -119,13 +121,30 @@ namespace WS.WebAPI.Controllers
         {
             if (dto == null)
                 return BadRequest("{error: 'Gerekli veri gonderilmedi'} ");
-            var product = _mapper.Map<Product>(dto);
 
-            _productBs.AddProduct(product);
-            return CreatedAtAction(nameof(GetById), new { id = product.ProductId }, product);
+            var response = _productBs.AddProduct(dto);
+            return Ok(response);
+        }
 
+        [HttpPut]
+        public IActionResult UpdateProduct([FromBody] ProductPutDto dto)
+        {
+            if (dto == null)
+                return BadRequest();
 
+            var response = _productBs.UpdateProduct(dto);
+            return Ok(response);
+        }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProduct([FromRoute] int id)
+        {
+            var product = _productBs.GetById(id);
+
+            if (product.Data == null)
+                return NotFound(ApiResponse<Product>.Fail(404, "Urun bulunamadi"));
+            var response = _productBs.DeleteProduct(id);
+            return Ok(response);
         }
     }
 }

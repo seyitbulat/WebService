@@ -1,6 +1,8 @@
-﻿namespace WS.Model.Dtos.Product
+﻿using Infrastructure.Model;
+
+namespace WS.Model.Dtos.Product
 {
-    public class ProductPostDto
+    public class ProductPutDto : IDto
     {
         public string ProductName { get; set; }
         public decimal? UnitPrice { get; set; }

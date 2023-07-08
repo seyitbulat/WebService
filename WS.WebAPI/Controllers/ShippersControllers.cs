@@ -55,7 +55,7 @@ namespace WS.WebAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet("getbyphone")]
+        [HttpGet("getbyname")]
         public IActionResult GetByName([FromQuery] string companyName)
         {
             List<Shipper> shippers = _shipperBs.GetByName(companyName);

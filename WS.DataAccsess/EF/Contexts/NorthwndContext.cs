@@ -16,7 +16,7 @@ namespace WS.DataAccsess.EF.Contexts
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
+       // public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Shipper> Shippers { get; set; }
     }
 }

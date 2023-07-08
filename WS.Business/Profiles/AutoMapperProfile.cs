@@ -7,7 +7,7 @@ using WS.Model.Dtos.Shipper;
 using WS.Model.Dtos.Supplier;
 using WS.Model.Entities;
 
-namespace WS.WebAPI.Profiles
+namespace WS.Business.Profiles
 {
     public class AutoMapperProfile : Profile
     {
@@ -26,6 +26,7 @@ namespace WS.WebAPI.Profiles
                             opt => opt.MapFrom(src => src.Supplier.Phone));
 
             CreateMap<ProductPostDto, Product>();
+            CreateMap<ProductPutDto, Product>();
 
             // Category Entity
             CreateMap<Category, CategoryGetDto>();
