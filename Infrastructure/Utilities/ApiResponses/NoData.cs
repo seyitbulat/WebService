@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Utilities.ApiResponses
 {
-    internal class NoResponse
+    public class NoData
     {
     }
 }

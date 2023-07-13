@@ -10,7 +10,7 @@ namespace WS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseController
     {
         private readonly IProductBs _productBs;
 
@@ -19,22 +19,23 @@ namespace WS.WebAPI.Controllers
         {
             _productBs = productBs;
         }
-
+        #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ProductGetDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
             var response = _productBs.GetById(id, "Category", "Supplier");
-           // if (response == null)
-            //    return NotFound();
-            return Ok(response);
-        }
 
+            return SendRespone(response);
+        }
+        #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet]
         public IActionResult GetProducts()
         {
@@ -81,7 +82,7 @@ namespace WS.WebAPI.Controllers
             #endregion
             #region MAPPING YONTEM 3
             var response = _productBs.GetProducts("Category", "Supplier");
-            return Ok(response);
+            return SendRespone(response);
 
             //if (products.Count > 0)
             //{
@@ -91,60 +92,54 @@ namespace WS.WebAPI.Controllers
             #endregion
         }
 
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("getbyprice")]
         public IActionResult GetByPrice([FromQuery] decimal min, [FromQuery] decimal max)
         {
             var response = _productBs.GetByPriceRange(min, max, "Category", "Supplier");
-            return Ok(response);
-            //if (products.Count > 0)
-            //{
-            //    return Ok(products);
-            //}
-            //return NotFound();
+            return SendRespone(response);
+
         }
 
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("getbystock")]
         public IActionResult GetByStock([FromQuery] short min, [FromQuery] short max)
         {
             var response = _productBs.GetByStockRange(min, max, "Category", "Supplier");
-            return Ok(response);
-            //if (products.Count > 0)
-            //{
-            //    return Ok(products);
-            //}
 
-            //return NotFound();
+            return SendRespone(response);
+
         }
 
         [HttpPost]
         public IActionResult SaveNewProduct([FromBody] ProductPostDto dto)
         {
-            if (dto == null)
-                return BadRequest("{error: 'Gerekli veri gonderilmedi'} ");
 
             var response = _productBs.AddProduct(dto);
-            return Ok(response);
+            return CreatedAtAction(nameof(GetById), new { id = response.Data.ProductId }, response.Data);
         }
 
         [HttpPut]
         public IActionResult UpdateProduct([FromBody] ProductPutDto dto)
         {
-            if (dto == null)
-                return BadRequest();
-
             var response = _productBs.UpdateProduct(dto);
-            return Ok(response);
+            return SendRespone(response);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct([FromRoute] int id)
         {
-            var product = _productBs.GetById(id);
+            var response = _productBs.GetById(id);
 
-            if (product.Data == null)
-                return NotFound(ApiResponse<Product>.Fail(404, "Urun bulunamadi"));
-            var response = _productBs.DeleteProduct(id);
-            return Ok(response);
+            return SendRespone(response);
         }
     }
 }

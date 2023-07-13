@@ -12,8 +12,8 @@ namespace WS.Business.Interfaces
         ApiResponse<List<ProductGetDto>> GetByStockRange(short min, short max, params string[] includeList);
 
 
-        ApiResponse<Product> AddProduct(ProductPostDto entity);
-        ApiResponse<Product> UpdateProduct(ProductPutDto entity);
+        ApiResponse<Product> AddProduct(ProductPostDto dto);
+        ApiResponse<NoData> UpdateProduct(ProductPutDto dto);
         ApiResponse<Product> DeleteProduct(int ProductId);
 
         ApiResponse<ProductGetDto> GetById(int ProductId, params string[] includeList);

@@ -8,7 +8,7 @@ namespace Infrastructure.DataAccess.Interfaces
     {
         List<TEntity> GetAll(Expression<Func<TEntity,bool>> predicate = null, params string[] includeList);
         TEntity Get(Expression<Func<TEntity,bool>> predicated, params string[] includeList);
-        void Insert(TEntity entity);
+        TEntity Insert(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
     }

@@ -49,11 +49,12 @@ namespace Infrastructure.DataAccess.Implementations.EF
             return dbSet.Where(predicate).ToList();
         }
 
-        public void Insert(TEntity entity)
+        public TEntity Insert(TEntity entity)
         {
             using var ctx = new TContext();
             ctx.Set<TEntity>().Add(entity);
             ctx.SaveChanges();
+            return entity;
         }
 
         public void Update(TEntity entity)
