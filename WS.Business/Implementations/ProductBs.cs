@@ -26,6 +26,9 @@ namespace WS.Business.Implementations
         {
             try
             {
+                if (ProductId < 0)
+                    throw new BadRequestException("Id degeri negatif olamaz");
+
                 var product = _repo.GetById(ProductId, includeList);
                 if (product != null)
                 {
@@ -36,6 +39,9 @@ namespace WS.Business.Implementations
             }
             catch (Exception ex)
             {
+                if (ex is BadRequestException)
+                    return ApiResponse<ProductGetDto>.Fail(StatusCodes.Status400BadRequest, ex.Message);
+
                 if (ex is NotFoundException)
                     return ApiResponse<ProductGetDto>.Fail(StatusCodes.Status404NotFound, ex.Message);
 
