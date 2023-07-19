@@ -16,4 +16,8 @@
     <ProjectReference Include="..\WS.Model\WS.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+
 </Project>
