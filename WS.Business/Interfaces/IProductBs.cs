@@ -14,7 +14,7 @@ namespace WS.Business.Interfaces
 
         Task<ApiResponse<Product>> AddProductAsync(ProductPostDto dto);
         Task<ApiResponse<NoData>> UpdateProductAsync(ProductPutDto dto);
-        Task<ApiResponse<Product>> DeleteProductAsync(int ProductId);
+        Task<ApiResponse<NoData>> DeleteProductAsync(int ProductId);
 
         Task<ApiResponse<ProductGetDto>> GetByIdAsync(int ProductId, params string[] includeList);
     }

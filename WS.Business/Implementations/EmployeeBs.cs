@@ -1,5 +1,10 @@
-﻿using WS.Business.Interfaces;
+﻿using AutoMapper;
+using Infrastructure.Utilities.ApiResponses;
+using Microsoft.AspNetCore.Http;
+using WS.Business.CustomExceptions;
+using WS.Business.Interfaces;
 using WS.DataAccsess.Interfaces;
+using WS.Model.Dtos.Employee;
 using WS.Model.Entities;
 
 namespace WS.Business.Implementations
@@ -7,30 +12,65 @@ namespace WS.Business.Implementations
     public class EmployeeBs : IEmployeeBs
     {
         private readonly IEmployeeRepository _repo;
+        private readonly IMapper _mapper;
 
-        public Employee GetById(int id)
-        {
-            return _repo.GetById(id);
-        }
-
-        public EmployeeBs(IEmployeeRepository repo)
+        public EmployeeBs(IEmployeeRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
-        public List<Employee> GetByAgeRange(int min, int max)
+        public async Task<ApiResponse<EmployeeGetDto>> GetByIdAsync(int id)
         {
-            return _repo.GetByAgeRange(min, max);
+            if (id < 0)
+                throw new BadRequestException("Id degeri negatif olamaz");
+
+            var employee = await _repo.GetByIdAsync(id);
+            if (employee != null)
+            {
+                var dto = _mapper.Map<EmployeeGetDto>(employee);
+                return ApiResponse<EmployeeGetDto>.Success(StatusCodes.Status200OK, dto);
+            }
+            throw new NotFoundException("Icerik bulunamadi");
         }
 
-        public List<Employee> GetEmployees()
+        public async Task<ApiResponse<List<EmployeeGetDto>>> GetEmployeesAsync()
         {
-            return _repo.GetAll();
+            var employees = await _repo.GetAllAsync();
+            if (employees != null && employees.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<EmployeeGetDto>>(employees);
+                return ApiResponse<List<EmployeeGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Icerik bulunamadi");
         }
 
-        public void AddEmployee(Employee employee)
+        public async Task<ApiResponse<List<EmployeeGetDto>>> GetByAgeRangeAsync(int min, int max)
         {
-             _repo.Insert(employee);
+            if (min > max && min > 0 && max > 0)
+                throw new BadRequestException("min, max'tan buyuk olamaz");
+
+            if (min < 0 || max < 0)
+                throw new BadRequestException("min, max negatif deger alamaz");
+
+            var employees = await _repo.GetByAgeRangeAsync(min,max);
+            if (employees != null && employees.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<EmployeeGetDto>>(employees);
+                return ApiResponse<List<EmployeeGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Icerik bulunamadi");
+        }
+
+
+        public async Task<ApiResponse<Employee>> AddEmployeeAsync(EmployeePostDto dto)
+        {
+            if (dto == null)
+                throw new BadRequestException("Eklenecek musteri bilgisi girmelisiniz");
+
+            var employee = _mapper.Map<Employee>(dto);
+            await _repo.InsertAsync(employee);
+            return ApiResponse<Employee>.Success(StatusCodes.Status201Created);
         }
     }
 }

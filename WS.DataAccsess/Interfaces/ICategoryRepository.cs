@@ -5,7 +5,7 @@ namespace WS.DataAccsess.Interfaces
 {
     public interface ICategoryRepository:IBaseRepository<Category>
     {
-        List<Category> GetByDescription(string description, params string[] includeList);
-        Category GetById(int id, params string[] includeList);
+        Task<List<Category>> GetByDescriptionAsync(string description, params string[] includeList);
+        Task<Category> GetByIdAsync(int id, params string[] includeList);
     }
 }

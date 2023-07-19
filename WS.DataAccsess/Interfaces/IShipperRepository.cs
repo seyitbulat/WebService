@@ -10,8 +10,8 @@ namespace WS.DataAccsess.Interfaces
 {
     public interface IShipperRepository:IBaseRepository<Shipper>
     {
-        Shipper GetById(int id);
-        List<Shipper> GetByName(string name);
-        List<Shipper> GetByPhone(string phone);
+        Task<Shipper> GetByIdAsync(int id);
+        Task<List<Shipper>> GetByNameAsync(string name);
+        Task<List<Shipper>> GetByPhoneAsync(string phone);
     }
 }

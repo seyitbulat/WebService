@@ -1,16 +1,22 @@
-﻿using WS.Model.Entities;
+﻿using Infrastructure.Utilities.ApiResponses;
+using WS.Model.Dtos.Shipper;
+using WS.Model.Entities;
 
 namespace WS.Business.Interfaces
 {
     public interface IShipperBs
     {
-        Shipper GetById(int id);
-        List<Shipper> GetByName(string name);
-        List<Shipper> GetByPhone(string phone);
-        List<Shipper> GetShippers();
+        Task<ApiResponse<ShipperGetDto>> GetByIdAsync(int id);
 
-        void AddShipper(Shipper shipper);
-        void RemoveShipper(Shipper shipper);
-        void UpdateShipper(Shipper shipper);
+        Task<ApiResponse<List<ShipperGetDto>>> GetShippersAsync();
+
+        Task<ApiResponse<List<ShipperGetDto>>> GetByNameAsync(string name);
+        Task<ApiResponse<List<ShipperGetDto>>> GetByPhoneAsync(string phone);
+        
+
+        Task<ApiResponse<Shipper>> AddShipperAsync(ShipperPostDto dto);
+
+        Task<ApiResponse<NoData>> DeleteShipperAsync(int id);
+        Task<ApiResponse<NoData>> UpdateShipperAsync(Shipper shipper);
     }
 }

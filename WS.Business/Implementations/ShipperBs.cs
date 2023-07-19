@@ -1,5 +1,13 @@
-﻿using WS.Business.Interfaces;
+﻿using AutoMapper;
+using Infrastructure.Model;
+using Infrastructure.Utilities.ApiResponses;
+using Microsoft.AspNetCore.Http;
+using System.Xml.Linq;
+using WS.Business.CustomExceptions;
+using WS.Business.Interfaces;
 using WS.DataAccsess.Interfaces;
+using WS.Model.Dtos.Product;
+using WS.Model.Dtos.Shipper;
 using WS.Model.Entities;
 
 namespace WS.Business.Implementations
@@ -7,45 +15,98 @@ namespace WS.Business.Implementations
     public class ShipperBs : IShipperBs
     {
         private readonly IShipperRepository _repo;
+        private readonly IMapper _mapper;
 
-        public ShipperBs(IShipperRepository repo)
+        public ShipperBs(IShipperRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
-        public void AddShipper(Shipper shipper)
+        public async Task<ApiResponse<ShipperGetDto>> GetByIdAsync(int id)
         {
-            _repo.Insert(shipper);
+            if (id < 0)
+                throw new BadRequestException("Id degeri negatif olamaz");
+
+            var shipper = await _repo.GetByIdAsync(id);
+            if (shipper != null)
+            {
+                var dto = _mapper.Map<ShipperGetDto>(shipper);
+                return ApiResponse<ShipperGetDto>.Success(StatusCodes.Status200OK, dto);
+            }
+            throw new NotFoundException("Icerik bulunamadi");
         }
 
-        public Shipper GetById(int id)
+        public async Task<ApiResponse<List<ShipperGetDto>>> GetShippersAsync()
         {
-            return _repo.GetById(id);
+            var shippers = await _repo.GetAllAsync();
+            if (shippers != null && shippers.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ShipperGetDto>>(shippers);
+                return ApiResponse<List<ShipperGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Icerik bulunamadi");
         }
 
-        public List<Shipper> GetShippers()
+        public async Task<ApiResponse<List<ShipperGetDto>>> GetByNameAsync(string name)
         {
-            return _repo.GetAll();
+            if (name == null)
+                throw new BadRequestException("name degeri bos olamaz");
+
+            var shippers = await _repo.GetByNameAsync(name);
+
+            if (shippers != null && shippers.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ShipperGetDto>>(shippers);
+                return ApiResponse<List<ShipperGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Icerik bulunamadi");
         }
 
-        public List<Shipper> GetByName(string name)
+        public async Task<ApiResponse<List<ShipperGetDto>>> GetByPhoneAsync(string phone)
         {
-            return _repo.GetByName(name);
+            if (phone == null)
+                throw new BadRequestException("phone degeri bos olamaz");
+
+            var shippers = await _repo.GetByNameAsync(phone);
+
+            if (shippers != null && shippers.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ShipperGetDto>>(shippers);
+                return ApiResponse<List<ShipperGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Icerik bulunamadi");
         }
 
-        public List<Shipper> GetByPhone(string phone)
+
+        public async Task<ApiResponse<Shipper>> AddShipperAsync(ShipperPostDto dto)
         {
-            return _repo.GetByPhone(phone);
+            if (dto == null)
+                throw new BadRequestException("Gönderilecek shipper bilgisi yollamalısınz");
+
+
+            var shipper = _mapper.Map<Shipper>(dto);
+            var insertedList = await _repo.InsertAsync(shipper);
+            return ApiResponse<Shipper>.Success(StatusCodes.Status201Created, insertedList);
         }
 
-        public void RemoveShipper(Shipper shipper)
+        public async Task<ApiResponse<NoData>> DeleteShipperAsync(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+                throw new BadRequestException("Id girmelisiniz");
+
+            if (id < 0)
+                throw new BadRequestException("Id negatif olamaz");
+
+            var shipper = await _repo.GetByIdAsync(id);
+            await _repo.DeleteAsync(shipper);
+            return ApiResponse<NoData>.Success(StatusCodes.Status200OK);
         }
 
-        public void UpdateShipper(Shipper shipper)
+        public async Task<ApiResponse<NoData>> UpdateShipperAsync(Shipper shipper)
         {
             throw new NotImplementedException();
         }
     }
+
 }

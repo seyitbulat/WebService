@@ -7,24 +7,24 @@ namespace WS.DataAccsess.EF.Repositories
 {
     public class SupplierRepository : BaseRepository<Supplier, NorthwndContext>, ISupplierRepository
     {
-        public Supplier GetById(int id, params string[] includeList)
+        public async Task<Supplier> GetByIdAsync(int id, params string[] includeList)
         {
-            return Get(s => s.SupplierId == id, includeList);
+            return await GetAsync(s => s.SupplierId == id, includeList);
         }
 
-        public List<Supplier> GetByCity(string city, params string[] includeList)
+        public async Task<List<Supplier>> GetByCityAsync(string city, params string[] includeList)
         {
-            return GetAll(s => s.City == city, includeList);
+            return await GetAllAsync(s => s.City == city, includeList);
         }
 
-        public List<Supplier> GetByCompanyName(string companyName, params string[] includeList)
+        public async Task<List<Supplier>> GetByCompanyNameAsync(string companyName, params string[] includeList)
         {
-            return GetAll(s => s.CompanyName == companyName, includeList);
+            return await GetAllAsync(s => s.CompanyName == companyName, includeList);
         }
 
-        public List<Supplier> GetByCountry(string country, params string[] includeList)
+        public async Task<List<Supplier>> GetByCountryAsync(string country, params string[] includeList)
         {
-            return GetAll(s => s.Country == country, includeList);
+            return await GetAllAsync(s => s.Country == country, includeList);
         }
     }
 }

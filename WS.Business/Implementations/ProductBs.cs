@@ -97,22 +97,18 @@ namespace WS.Business.Implementations
 
         public async Task<ApiResponse<Product>> AddProductAsync(ProductPostDto dto)
         {
-
             if (dto == null)
                 throw new BadRequestException("Gönderilecek ürün bilgisi yollamalısınz");
 
             if (dto.UnitPrice < 0)
                 throw new BadRequestException("Fiyat 0'dan buyuk olmalidir");
-            return ApiResponse<Product>.Fail(StatusCodes.Status404NotFound, "Fiyat 0'dan buyuk olmalidir");
 
             var product = _mapper.Map<Product>(dto);
             var insertedList = await _repo.InsertAsync(product);
             return ApiResponse<Product>.Success(StatusCodes.Status201Created, insertedList);
-
-
         }
 
-        public async Task<ApiResponse<Product>> DeleteProductAsync(int ProductId)
+        public async Task<ApiResponse<NoData>> DeleteProductAsync(int ProductId)
         {
 
             if (ProductId == null)
@@ -123,7 +119,7 @@ namespace WS.Business.Implementations
 
             var product = await _repo.GetByIdAsync(ProductId);
             await _repo.DeleteAsync(product);
-            return ApiResponse<Product>.Success(StatusCodes.Status200OK);
+            return ApiResponse<NoData>.Success(StatusCodes.Status200OK);
 
 
         }
