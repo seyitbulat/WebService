@@ -7,19 +7,19 @@ namespace WS.DataAccsess.EF.Repositories
 {
     public class ProductRepository : BaseRepository<Product, NorthwndContext>, IProductRepository
     {
-        public Product GetById(int id, params string[] includeList)
+        public async Task<Product> GetByIdAsync(int id, params string[] includeList)
         {
-            return Get(prd => prd.ProductId == id, includeList);
+            return await GetAsync(prd => prd.ProductId == id, includeList);
         }
 
-        public List<Product> GetByPriceRange(decimal min, decimal max, params string[] includeList)
+        public async Task<List<Product>> GetByPriceRangeAsync(decimal min, decimal max, params string[] includeList)
         {
-            return GetAll(p => p.UnitPrice > min && p.UnitPrice < max, includeList);
+            return await GetAllAsync(p => p.UnitPrice > min && p.UnitPrice < max, includeList);
         }
 
-        public List<Product> GetByStockRange(short min, short max, params string[] includeList)
+        public async Task<List<Product>> GetByStockRangeAsync(short min, short max, params string[] includeList)
         {
-            return GetAll(p => p.UnitsInStock > min && p.UnitsInStock < max, includeList);
+            return await GetAllAsync(p => p.UnitsInStock > min && p.UnitsInStock < max, includeList);
         }
     }
 }

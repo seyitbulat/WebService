@@ -5,9 +5,9 @@ namespace WS.DataAccsess.Interfaces
 {
     public interface IProductRepository:IBaseRepository<Product>
     {
-         List<Product> GetByPriceRange(decimal min, decimal max, params string[] includeList);
-         List<Product> GetByStockRange(short min, short max, params string[] includeList);
-         Product GetById(int id, params string[] includeList);
+         Task<List<Product>> GetByPriceRangeAsync(decimal min, decimal max, params string[] includeList);
+         Task<List<Product>> GetByStockRangeAsync(short min, short max, params string[] includeList);
+         Task<Product> GetByIdAsync(int id, params string[] includeList);
         
     }
 }

@@ -22,13 +22,13 @@ namespace WS.Business.Implementations
         }
 
 
-        public ApiResponse<ProductGetDto> GetById(int ProductId, params string[] includeList)
+        public async Task<ApiResponse<ProductGetDto>> GetByIdAsync(int ProductId, params string[] includeList)
         {
 
             if (ProductId < 0)
                 throw new BadRequestException("Id degeri negatif olamaz");
 
-            var product = _repo.GetById(ProductId, includeList);
+            var product = await _repo.GetByIdAsync(ProductId, includeList);
             if (product != null)
             {
                 var dto = _mapper.Map<ProductGetDto>(product);
@@ -39,7 +39,7 @@ namespace WS.Business.Implementations
 
         }
 
-        public ApiResponse<List<ProductGetDto>> GetByPriceRange(decimal min, decimal max, params string[] includeList)
+        public async Task<ApiResponse<List<ProductGetDto>>> GetByPriceRangeAsync(decimal min, decimal max, params string[] includeList)
         {
 
             if (min > max && min > 0 && max > 0)
@@ -49,7 +49,7 @@ namespace WS.Business.Implementations
                 throw new BadRequestException("min, max negatif deger alamaz");
 
 
-            var products = _repo.GetByPriceRange(min, max, includeList);
+            var products = await _repo.GetByPriceRangeAsync(min, max, includeList);
             if (products != null && products.Count > 0)
             {
                 var dtoList = _mapper.Map<List<ProductGetDto>>(products);
@@ -63,13 +63,13 @@ namespace WS.Business.Implementations
 
 
 
-        public ApiResponse<List<ProductGetDto>> GetByStockRange(short min, short max, params string[] includeList)
+        public async Task<ApiResponse<List<ProductGetDto>>> GetByStockRangeAsync(short min, short max, params string[] includeList)
         {
 
             if (min < 0 || max < 0)
                 throw new BadRequestException("min, max negatif deger alamaz");
 
-            var products = _repo.GetByStockRange(min, max, includeList);
+            var products = await _repo.GetByStockRangeAsync(min, max, includeList);
 
             if (products != null && products.Count > 0)
             {
@@ -81,10 +81,10 @@ namespace WS.Business.Implementations
 
         }
 
-        public ApiResponse<List<ProductGetDto>> GetProducts(params string[] includeList)
+        public async Task<ApiResponse<List<ProductGetDto>>> GetProductsAsync(params string[] includeList)
         {
 
-            var products = _repo.GetAll(includeList: includeList);
+            var products = await _repo.GetAllAsync(includeList: includeList);
             if (products.Count > 0)
             {
                 var dtoList = _mapper.Map<List<ProductGetDto>>(products);
@@ -95,7 +95,7 @@ namespace WS.Business.Implementations
 
         }
 
-        public ApiResponse<Product> AddProduct(ProductPostDto dto)
+        public async Task<ApiResponse<Product>> AddProductAsync(ProductPostDto dto)
         {
 
             if (dto == null)
@@ -106,13 +106,13 @@ namespace WS.Business.Implementations
             return ApiResponse<Product>.Fail(StatusCodes.Status404NotFound, "Fiyat 0'dan buyuk olmalidir");
 
             var product = _mapper.Map<Product>(dto);
-            var insertedList = _repo.Insert(product);
+            var insertedList = await _repo.InsertAsync(product);
             return ApiResponse<Product>.Success(StatusCodes.Status201Created, insertedList);
 
 
         }
 
-        public ApiResponse<Product> DeleteProduct(int ProductId)
+        public async Task<ApiResponse<Product>> DeleteProductAsync(int ProductId)
         {
 
             if (ProductId == null)
@@ -121,14 +121,14 @@ namespace WS.Business.Implementations
             if (ProductId < 0)
                 throw new BadRequestException("Id negatif olamaz");
 
-            var product = _repo.GetById(ProductId);
-            _repo.Delete(product);
+            var product = await _repo.GetByIdAsync(ProductId);
+            await _repo.DeleteAsync(product);
             return ApiResponse<Product>.Success(StatusCodes.Status200OK);
 
 
         }
 
-        public ApiResponse<NoData> UpdateProduct(ProductPutDto dto)
+        public async Task<ApiResponse<NoData>> UpdateProductAsync(ProductPutDto dto)
         {
 
             if (dto == null)
@@ -141,7 +141,7 @@ namespace WS.Business.Implementations
 
             var product = _mapper.Map<Product>(dto);
 
-            _repo.Update(product);
+            await _repo.UpdateAsync(product);
 
             return ApiResponse<NoData>.Success(StatusCodes.Status200OK);
 

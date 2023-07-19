@@ -7,15 +7,15 @@ namespace WS.Business.Interfaces
 {
     public interface IProductBs
     {
-        ApiResponse<List<ProductGetDto>> GetProducts(params string[] includeList);
-        ApiResponse<List<ProductGetDto>> GetByPriceRange(decimal min, decimal max, params string[] includeList);
-        ApiResponse<List<ProductGetDto>> GetByStockRange(short min, short max, params string[] includeList);
+        Task<ApiResponse<List<ProductGetDto>>> GetProductsAsync(params string[] includeList);
+        Task<ApiResponse<List<ProductGetDto>>> GetByPriceRangeAsync(decimal min, decimal max, params string[] includeList);
+        Task<ApiResponse<List<ProductGetDto>>> GetByStockRangeAsync(short min, short max, params string[] includeList);
 
 
-        ApiResponse<Product> AddProduct(ProductPostDto dto);
-        ApiResponse<NoData> UpdateProduct(ProductPutDto dto);
-        ApiResponse<Product> DeleteProduct(int ProductId);
+        Task<ApiResponse<Product>> AddProductAsync(ProductPostDto dto);
+        Task<ApiResponse<NoData>> UpdateProductAsync(ProductPutDto dto);
+        Task<ApiResponse<Product>> DeleteProductAsync(int ProductId);
 
-        ApiResponse<ProductGetDto> GetById(int ProductId, params string[] includeList);
+        Task<ApiResponse<ProductGetDto>> GetByIdAsync(int ProductId, params string[] includeList);
     }
 }

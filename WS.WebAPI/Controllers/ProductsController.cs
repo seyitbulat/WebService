@@ -25,9 +25,9 @@ namespace WS.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var response = _productBs.GetById(id, "Category", "Supplier");
+            var response = await _productBs.GetByIdAsync(id, "Category", "Supplier");
 
             return SendRespone(response);
         }
@@ -37,7 +37,7 @@ namespace WS.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
         [HttpGet]
-        public IActionResult GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
             #region MAPPING YONTEM 1
             //var products = _productBs.GetProducts("Category");
@@ -81,7 +81,7 @@ namespace WS.WebAPI.Controllers
             //return NotFound();
             #endregion
             #region MAPPING YONTEM 3
-            var response = _productBs.GetProducts("Category", "Supplier");
+            var response = await _productBs.GetProductsAsync("Category", "Supplier");
             return SendRespone(response);
 
             //if (products.Count > 0)
@@ -98,9 +98,9 @@ namespace WS.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
         [HttpGet("getbyprice")]
-        public IActionResult GetByPrice([FromQuery] decimal min, [FromQuery] decimal max)
+        public async Task<IActionResult> GetByPrice([FromQuery] decimal min, [FromQuery] decimal max)
         {
-            var response = _productBs.GetByPriceRange(min, max, "Category", "Supplier");
+            var response = await _productBs.GetByPriceRangeAsync(min, max, "Category", "Supplier");
             return SendRespone(response);
 
         }
@@ -111,33 +111,33 @@ namespace WS.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
         [HttpGet("getbystock")]
-        public IActionResult GetByStock([FromQuery] short min, [FromQuery] short max)
+        public async Task<IActionResult> GetByStock([FromQuery] short min, [FromQuery] short max)
         {
-            var response = _productBs.GetByStockRange(min, max, "Category", "Supplier");
+            var response = await _productBs.GetByStockRangeAsync(min, max, "Category", "Supplier");
 
             return SendRespone(response);
 
         }
 
         [HttpPost]
-        public IActionResult SaveNewProduct([FromBody] ProductPostDto dto)
+        public async Task<IActionResult> SaveNewProduct([FromBody] ProductPostDto dto)
         {
 
-            var response = _productBs.AddProduct(dto);
+            var response = await _productBs.AddProductAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = response.Data.ProductId }, response.Data);
         }
 
         [HttpPut]
-        public IActionResult UpdateProduct([FromBody] ProductPutDto dto)
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductPutDto dto)
         {
-            var response = _productBs.UpdateProduct(dto);
+            var response = await _productBs.UpdateProductAsync(dto);
             return SendRespone(response);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteProduct([FromRoute] int id)
+        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
-            var response = _productBs.GetById(id);
+            var response = await _productBs.GetByIdAsync(id);
 
             return SendRespone(response);
         }
