@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Infrastructure.Utilities.ApiResponses;
+using Microsoft.AspNetCore.Http;
+using WS.Business.CustomExceptions;
 using WS.Business.Interfaces;
 using WS.DataAccsess.Interfaces;
 using WS.Model.Dtos.Category;
@@ -20,42 +22,91 @@ namespace WS.Business.Implementations
 
         public ApiResponse<Category> AddCategory(CategoryPostDto dto)
         {
-            var category = _mapper.Map<Category>(dto);
-            _repo.Insert(category);
-            return ApiResponse<Category>.Success(200, category);
+            try
+            {
+                var category = _mapper.Map<Category>(dto);
+                if (dto == null)
+                    throw new BadRequestException("Gonderilecek kategori bilgisi yollamalisiniz");
+
+                var insertedCategory = _repo.Insert(category);
+                return ApiResponse<Category>.Success(200, insertedCategory);
+            }
+            catch (Exception ex)
+            {
+                if (ex is BadRequestException)
+                    return ApiResponse<Category>.Fail(StatusCodes.Status400BadRequest, ex.Message);
+
+                return ApiResponse<Category>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         public ApiResponse<List<CategoryGetDto>> GetByDescription(string desc, params string[] includeList)
         {
-            var categories = _repo.GetByDescription(desc, includeList);
-            if(categories.Count > 0)
+            try
             {
-                var dtoList = _mapper.Map<List<CategoryGetDto>>(categories);
-                return ApiResponse<List<CategoryGetDto>>.Success(200, dtoList);
+                if (desc != null)
+                    throw new BadRequestException("Bir desc icerigi girmelisiniz");
+
+                var categories = _repo.GetByDescription(desc, includeList);
+                if (categories.Count > 0)
+                {
+                    var dtoList = _mapper.Map<List<CategoryGetDto>>(categories);
+                    return ApiResponse<List<CategoryGetDto>>.Success(200, dtoList);
+                }
+                throw new NotFoundException("Gosterilecek kategori biligisi bulunamadi");
             }
-            return null;
+            catch (Exception ex)
+            {
+                if (ex is BadRequestException)
+                    return ApiResponse<List<CategoryGetDto>>.Fail(StatusCodes.Status400BadRequest, ex.Message);
+
+                if (ex is NotFoundException)
+                    return ApiResponse<List<CategoryGetDto>>.Fail(StatusCodes.Status404NotFound, ex.Message);
+
+                return ApiResponse<List<CategoryGetDto>>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
+
+            }
         }
 
         public ApiResponse<CategoryGetDto> GetById(int id, params string[] includeList)
         {
-            var category = _repo.GetById(id, includeList);
-            if (category != null)
+            try
             {
-                var dto = _mapper.Map<CategoryGetDto>(category);
-                return ApiResponse<CategoryGetDto>.Success(200, dto);
+                var category = _repo.GetById(id, includeList);
+                if (category != null)
+                {
+                    var dto = _mapper.Map<CategoryGetDto>(category);
+                    return ApiResponse<CategoryGetDto>.Success(200, dto);
+                }
+                throw new NotFoundException("Gosterilecek kategori bilgisi bulunamadi");
             }
-            return null;
+            catch (Exception ex)
+            {
+                if (ex is NotFoundException)
+                    return ApiResponse<CategoryGetDto>.Fail(StatusCodes.Status404NotFound, ex.Message);
+
+                return ApiResponse<CategoryGetDto>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         public ApiResponse<List<CategoryGetDto>> GetCategories(params string[] includeList)
         {
-            var categories = _repo.GetAll(includeList: includeList);
-            if (categories.Count > 0)
+            try
             {
-                var dtoList = _mapper.Map<List<CategoryGetDto>>(categories);
-                return ApiResponse<List<CategoryGetDto>>.Success(200, dtoList);
+                var categories = _repo.GetAll(includeList: includeList);
+                if (categories.Count > 0)
+                {
+                    var dtoList = _mapper.Map<List<CategoryGetDto>>(categories);
+                    return ApiResponse<List<CategoryGetDto>>.Success(200, dtoList);
+                }
+                throw new NotFoundException("Gosterilecek kategori bilgisi bulunamadi");
             }
-            return null;
+            catch (Exception ex)
+            {
+                if (ex is NotFoundException)
+                    return ApiResponse<List<CategoryGetDto>>.Fail(StatusCodes.Status404NotFound, ex.Message);
+                return ApiResponse<List<CategoryGetDto>>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

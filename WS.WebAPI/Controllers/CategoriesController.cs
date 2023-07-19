@@ -10,7 +10,7 @@ namespace WS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController : BaseController
     {
         private readonly ICategoryBs _categoryBs;
 
@@ -26,10 +26,9 @@ namespace WS.WebAPI.Controllers
         public IActionResult GetById([FromRoute] int id)
         {
             var response = _categoryBs.GetById(id);
-            //if(category == null)
-            //    return NotFound();
+           
 
-            return Ok(response);
+            return SendRespone(response);
         }
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
@@ -38,7 +37,7 @@ namespace WS.WebAPI.Controllers
         {
             var response = _categoryBs.GetCategories();
 
-            return Ok(response);
+            return SendRespone(response);
         }
 
         [Produces("application/json", "text/plain")]
@@ -48,7 +47,7 @@ namespace WS.WebAPI.Controllers
         {
             var response = _categoryBs.GetByDescription(desc);
 
-            return Ok(response);
+            return SendRespone(response);
 
         }
         [Produces("application/json", "text/plain")]
@@ -56,12 +55,11 @@ namespace WS.WebAPI.Controllers
         [HttpPost]
         public IActionResult SaveNewCategory([FromBody] CategoryPostDto dto)
         {
-            if (dto == null)
-                return BadRequest("{error: 'Gerekli veri gonderilmedi'} ");
+            
 
             var response = _categoryBs.AddCategory(dto);
 
-            return Ok(response);
+            return SendRespone(response);
         }
     }
 }

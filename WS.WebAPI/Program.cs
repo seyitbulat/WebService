@@ -18,6 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(WS.Business.Profiles.AutoMapperProfile));
 
+
 builder.Services.AddScoped<IProductBs, ProductBs>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
