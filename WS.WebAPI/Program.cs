@@ -1,5 +1,6 @@
 using WS.Business;
 using WS.WebAPI;
+using WS.WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,5 +25,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCustomException();
 
 app.Run();
