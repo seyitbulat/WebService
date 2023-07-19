@@ -6,10 +6,10 @@ namespace Infrastructure.DataAccess.Interfaces
     public interface IBaseRepository<TEntity>
         where TEntity : class, IEntity
     {
-        List<TEntity> GetAll(Expression<Func<TEntity,bool>> predicate = null, params string[] includeList);
-        TEntity Get(Expression<Func<TEntity,bool>> predicated, params string[] includeList);
-        TEntity Insert(TEntity entity);
-        void Update(TEntity entity);
-        void Delete(TEntity entity);
+        Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity,bool>> predicate = null, params string[] includeList);
+        Task<TEntity> GetAsync(Expression<Func<TEntity,bool>> predicated, params string[] includeList);
+        Task<TEntity> InsertAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity);
+        Task DeleteAsync(TEntity entity);
     }
 }

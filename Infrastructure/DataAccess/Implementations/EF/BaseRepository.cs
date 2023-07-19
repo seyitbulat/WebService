@@ -9,59 +9,59 @@ namespace Infrastructure.DataAccess.Implementations.EF
         where TContext : DbContext, new()
         where TEntity : class, IEntity
     {
-        public void Delete(TEntity entity)
+        public async Task DeleteAsync(TEntity entity)
         {
             using var ctx = new TContext();
             ctx.Set<TEntity>().Remove(entity);
-            ctx.SaveChanges();
+            await ctx.SaveChangesAsync();
         }
 
-        public TEntity Get(Expression<Func<TEntity, bool>> predicated, params string[] includeList)
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicated, params string[] includeList)
         {
             using var ctx = new TContext();
-            IQueryable<TEntity> dbSet = ctx.Set<TEntity>(); 
-            if(includeList.Length > 0)
+            IQueryable<TEntity> dbSet = ctx.Set<TEntity>();
+            if (includeList.Length > 0)
             {
-                foreach(var include in includeList)
+                foreach (var include in includeList)
                 {
                     dbSet = dbSet.Include(include);
                 }
             }
-            return dbSet.Where(predicated).SingleOrDefault();
+            return await dbSet.Where(predicated).SingleOrDefaultAsync();
         }
 
-        public List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null, params string[] includeList)
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null, params string[] includeList)
         {
             using var ctx = new TContext();
             IQueryable<TEntity> dbSet = ctx.Set<TEntity>();
 
-            if(includeList.Length > 0)
+            if (includeList.Length > 0)
             {
-                foreach(var include in includeList)
+                foreach (var include in includeList)
                 {
                     dbSet = dbSet.Include(include);
                 }
             }
 
-            if(predicate == null)
-                return dbSet.ToList();
+            if (predicate == null)
+                return await dbSet.ToListAsync();
 
-            return dbSet.Where(predicate).ToList();
+            return await dbSet.Where(predicate).ToListAsync();
         }
 
-        public TEntity Insert(TEntity entity)
+        public async Task<TEntity> InsertAsync(TEntity entity)
         {
             using var ctx = new TContext();
-            ctx.Set<TEntity>().Add(entity);
-            ctx.SaveChanges();
-            return entity;
+            var entityEntry = ctx.Set<TEntity>().AddAsync(entity);
+            await ctx.SaveChangesAsync();
+            return entityEntry.Result.Entity;
         }
 
-        public void Update(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
             using var ctx = new TContext();
             ctx.Set<TEntity>().Update(entity);
-            ctx.SaveChanges();
+            await ctx.SaveChangesAsync();
         }
     }
 }
