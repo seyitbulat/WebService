@@ -1,68 +1,75 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using Infrastructure.Utilities.ApiResponses;
 using Microsoft.AspNetCore.Mvc;
 using WS.Business.Interfaces;
 using WS.Model.Dtos.Employee;
 using WS.Model.Entities;
+using Infrastructure.Utilities.ApiResponses;
+using WS.Model.Dtos.Category;
 
 namespace WS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController : BaseController
     {
         private readonly IEmployeeBs _employeeBs;
-        private readonly IMapper _mapper;
 
-        public EmployeesController(IEmployeeBs employeeBs, IMapper mapper)
+        public EmployeesController(IEmployeeBs employeeBs)
         {
             _employeeBs = employeeBs;
-            _mapper = mapper;
         }
 
+        // GETBY ID
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<EmployeeGetDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<EmployeeGetDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var employee = _employeeBs.GetById(id);
-            if (employee == null)
-                return NotFound();
-
-            var dto = _mapper.Map<EmployeeGetDto>(employee);
-            return Ok(dto);
+            var response = await _employeeBs.GetByIdAsync(id);
+            return await SendResponse(response);
         }
 
+        // GETALLS
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<EmployeeGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet]
-        public IActionResult GetEmployees()
+        public async Task<IActionResult> GetEmployees()
         {
-            List<Employee> employees = _employeeBs.GetEmployees();
-            if (employees.Count > 0)
-            {
-                var returnList = _mapper.Map<List<EmployeeGetDto>>(employees);
-                return Ok(returnList);
-            }
-            return BadRequest();
+            var response = await _employeeBs.GetEmployeesAsync();
+            return await SendResponse(response);
         }
 
+        // GETBY AGE
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<EmployeeGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("getbyage")]
-        public IActionResult GetByAge([FromQuery] int min, [FromQuery] int max)
+        public async Task<IActionResult> GetByAge([FromQuery] int min, [FromQuery] int max)
         {
-            List<Employee> employees = _employeeBs.GetByAgeRange(min, max);
-            if(employees.Count > 0)
-            {
-                var returnList = _mapper.Map<List<EmployeeGetDto>>(employees);
-                return Ok(returnList);
-            }
-            return BadRequest();
+            var response = await _employeeBs.GetByAgeRangeAsync(min,max);
+            return await SendResponse(response);
         }
 
+        // INSERT EMPLOYEE
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApiResponse<Employee>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<Employee>))]
+        #endregion
         [HttpPost]
-        public IActionResult SaveNewEmployee([FromBody] EmployeePostDto dto)
+        public async Task<IActionResult> SaveNewEmployee([FromBody] EmployeePostDto dto)
         {
-            if(dto == null) 
-                return BadRequest();
-            var employee = _mapper.Map<Employee>(dto);
-            _employeeBs.AddEmployee(employee);
-            return CreatedAtAction(nameof(GetById), new Employee { EmployeeId = employee.EmployeeId}, employee);
+            var response = await _employeeBs.AddEmployeeAsync(dto);
+            return await SendResponse(response);
         }
     }
 }

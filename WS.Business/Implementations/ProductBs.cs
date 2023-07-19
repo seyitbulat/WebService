@@ -39,6 +39,20 @@ namespace WS.Business.Implementations
 
         }
 
+        public async Task<ApiResponse<List<ProductGetDto>>> GetProductsAsync(params string[] includeList)
+        {
+
+            var products = await _repo.GetAllAsync(includeList: includeList);
+            if (products.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ProductGetDto>>(products);
+                return ApiResponse<List<ProductGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Urun bulunamadi");
+
+
+        }
+
         public async Task<ApiResponse<List<ProductGetDto>>> GetByPriceRangeAsync(decimal min, decimal max, params string[] includeList)
         {
 
@@ -81,19 +95,7 @@ namespace WS.Business.Implementations
 
         }
 
-        public async Task<ApiResponse<List<ProductGetDto>>> GetProductsAsync(params string[] includeList)
-        {
-
-            var products = await _repo.GetAllAsync(includeList: includeList);
-            if (products.Count > 0)
-            {
-                var dtoList = _mapper.Map<List<ProductGetDto>>(products);
-                return ApiResponse<List<ProductGetDto>>.Success(StatusCodes.Status200OK, dtoList);
-            }
-            throw new NotFoundException("Urun bulunamadi");
-
-
-        }
+    
 
         public async Task<ApiResponse<Product>> AddProductAsync(ProductPostDto dto)
         {

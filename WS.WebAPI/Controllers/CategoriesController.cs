@@ -20,46 +20,60 @@ namespace WS.WebAPI.Controllers
             _categoryBs = categoryBs;
         }
 
+        // GETBY ID
+        #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type= typeof(ApiResponse<ProductGetDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<CategoryGetDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<CategoryGetDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var response = _categoryBs.GetById(id);
-           
-
-            return SendRespone(response);
+            var response = await _categoryBs.GetByIdAsync(id);
+            return await SendResponse(response);
         }
+
+
+        // GETALLS
+        #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<CategoryGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet]
-        public IActionResult GetCategories()
+        public async Task<IActionResult> GetCategories()
         {
-            var response = _categoryBs.GetCategories();
+            var response = await _categoryBs.GetCategoriesAsync();
 
-            return SendRespone(response);
+            return await SendResponse(response);
         }
 
+        // GETBY DESCRIPTION
+        #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<CategoryGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("GetByDescription")]
-        public IActionResult GetByDescription([FromQuery] string desc)
+        public async Task<IActionResult> GetByDescription([FromQuery] string desc)
         {
-            var response = _categoryBs.GetByDescription(desc);
+            var response = await _categoryBs.GetByDescriptionAsync(desc);
 
-            return SendRespone(response);
+            return await SendResponse(response);
 
         }
+        // INSERT CATEGORY
+        #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Product>))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApiResponse<Category>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<Category>))]
+        #endregion
         [HttpPost]
-        public IActionResult SaveNewCategory([FromBody] CategoryPostDto dto)
+        public async Task<IActionResult> SaveNewCategory([FromBody] CategoryPostDto dto)
         {
-            
-
-            var response = _categoryBs.AddCategory(dto);
-
-            return SendRespone(response);
+            var response = await _categoryBs.AddCategoryAsync(dto);
+            return await SendResponse(response);
         }
     }
 }
