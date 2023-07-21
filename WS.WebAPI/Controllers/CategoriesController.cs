@@ -63,6 +63,7 @@ namespace WS.WebAPI.Controllers
             return await SendResponse(response);
 
         }
+
         // INSERT CATEGORY
         #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
@@ -73,6 +74,33 @@ namespace WS.WebAPI.Controllers
         public async Task<IActionResult> SaveNewCategory([FromBody] CategoryPostDto dto)
         {
             var response = await _categoryBs.AddCategoryAsync(dto);
+            return await SendResponse(response);
+        }
+
+        // UPDATE CATEGORY
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<NoData>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<NoData>))]
+        #endregion
+        [HttpPut]
+        public async Task<IActionResult> UpdateCategory([FromBody] CategoryPutDto dto)
+        {
+            var response = await _categoryBs.UpdateCategoryAsync(dto);
+            return await SendResponse(response);
+        }
+
+        // DELETE CATEGORY
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse<NoData>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<NoData>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<NoData>))]
+        #endregion
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] int id)
+        {
+            var response = await _categoryBs.DeleteCategoryAsync(id);
             return await SendResponse(response);
         }
     }

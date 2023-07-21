@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WS.Model.Entities
+namespace WS.Model.Dtos.Order
 {
-    public class Order : IEntity
+    public class OrderGetDto : IDto
     {
-        public int OrderId { get; set; }
         public int? CustomerId { get; set; }
         public int? EmployeeId { get; set; }
         public DateTime? OrderDate { get; set; }
@@ -23,10 +22,5 @@ namespace WS.Model.Entities
         public string? ShipRegion { get; set; }
         public string? ShipPostalCode { get; set; }
         public string? ShipCounty { get; set; }
-
-
-        public Shipper? Shipper { get; set; }
-        public Customer? Customer { get; set; }
-        public Employee? Employee { get; set; }
     }
 }

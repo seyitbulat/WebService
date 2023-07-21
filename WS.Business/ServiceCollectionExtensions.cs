@@ -30,6 +30,9 @@ namespace WS.Business
 
             services.AddScoped<IShipperBs, ShipperBs>();
             services.AddScoped<IShipperRepository, ShipperRepository>();
+
+            services.AddScoped<IOrderDetailBs, OrderDetailBs>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
         }
     }
 }

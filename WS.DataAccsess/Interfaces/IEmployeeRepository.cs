@@ -8,5 +8,6 @@ namespace WS.DataAccsess.Interfaces
         Task<Employee> GetByIdAsync(int id);
         Task<List<Employee>> GetByCityAsync(string city);
         Task<List<Employee>> GetByAgeRangeAsync(int min, int max);
+        //Task<List<Employee>> GetByNameAsync(string name);
     }
 }

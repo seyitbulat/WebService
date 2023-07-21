@@ -8,7 +8,8 @@ namespace WS.Model.Entities
         public int? ProductId { get; set; }
         public decimal? UnitPrice { get; set; }
         public short? Quantity { get; set; }
+        public float? Discount { get; set; }
 
-        public List<Product>? products { get; set; }
+        public Product? Product { get; set; }
     }
 }

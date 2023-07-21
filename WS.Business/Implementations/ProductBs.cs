@@ -75,8 +75,6 @@ namespace WS.Business.Implementations
 
         }
 
-
-
         public async Task<ApiResponse<List<ProductGetDto>>> GetByStockRangeAsync(short min, short max, params string[] includeList)
         {
 
@@ -95,7 +93,62 @@ namespace WS.Business.Implementations
 
         }
 
-    
+
+        public async Task<ApiResponse<List<ProductGetDto>>> GetByCategoryAsync(int categoryId, params string[] includeList)
+        {
+            if (categoryId < 0)
+                throw new BadRequestException("Id negatif olamaz");
+
+            var products = await _repo.GetByCategoryAsync(categoryId, includeList);
+            if (products != null && products.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ProductGetDto>>(products);
+                return ApiResponse<List<ProductGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Urun bulunamadi");
+        }
+        public async Task<ApiResponse<List<ProductGetDto>>> GetByCategoryAsync(string categoryName, params string[] includeList)
+        {
+            if (categoryName == null)
+                throw new BadRequestException("categoryName degeri girin");
+
+            var products = await _repo.GetByCategoryAsync(categoryName, includeList);
+            if (products != null && products.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ProductGetDto>>(products);
+                return ApiResponse<List<ProductGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Urun bulunamadi");
+        }
+
+        public async Task<ApiResponse<List<ProductGetDto>>> GetBySupplierAsync(int supplierId, params string[] includeList)
+        {
+            if (supplierId < 0)
+                throw new BadRequestException("Id negatif olamaz");
+
+            var products = await _repo.GetByCategoryAsync(supplierId, includeList);
+            if (products != null && products.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ProductGetDto>>(products);
+                return ApiResponse<List<ProductGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Urun bulunamadi");
+
+        }
+        public async Task<ApiResponse<List<ProductGetDto>>> GetBySupplierAsync(string supplierCompanyName, params string[] includeList)
+        {
+            if (supplierCompanyName == null)
+                throw new BadRequestException("categoryName degeri girin");
+
+            var products = await _repo.GetByCategoryAsync(supplierCompanyName, includeList);
+            if (products != null && products.Count > 0)
+            {
+                var dtoList = _mapper.Map<List<ProductGetDto>>(products);
+                return ApiResponse<List<ProductGetDto>>.Success(StatusCodes.Status200OK, dtoList);
+            }
+            throw new NotFoundException("Urun bulunamadi");
+        }
+
 
         public async Task<ApiResponse<Product>> AddProductAsync(ProductPostDto dto)
         {
@@ -120,10 +173,13 @@ namespace WS.Business.Implementations
                 throw new BadRequestException("Id negatif olamaz");
 
             var product = await _repo.GetByIdAsync(ProductId);
-            await _repo.DeleteAsync(product);
-            return ApiResponse<NoData>.Success(StatusCodes.Status200OK);
-
-
+            
+            if(product != null)
+            {
+                await _repo.DeleteAsync(product);
+                return ApiResponse<NoData>.Success(StatusCodes.Status200OK);
+            }
+            throw new NotFoundException("Silinecek urun bulunamadi");
         }
 
         public async Task<ApiResponse<NoData>> UpdateProductAsync(ProductPutDto dto)

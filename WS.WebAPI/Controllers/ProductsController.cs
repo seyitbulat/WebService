@@ -82,6 +82,62 @@ namespace WS.WebAPI.Controllers
 
         }
 
+        // GETBY CATEGORY ID
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
+        [HttpGet("getbycategory/{id}")]
+        public async Task<IActionResult> GetByCategoryId([FromRoute] int id)
+        {
+            var response = await _productBs.GetByCategoryAsync(id, "Category", "Supplier");
+            return await SendResponse(response);
+        }
+
+        // GETBY CATEGORY NAME
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
+        [HttpGet("getbycategory")]
+        public async Task<IActionResult> GetByCategoryName([FromBody] string categoryName)
+        {
+            var response = await _productBs.GetByCategoryAsync(categoryName, "Category", "Supplier");
+            return await SendResponse(response);
+        }
+
+        // GETBY SUPPLIER ID
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
+        [HttpGet("getbysupplier/{id}")]
+        public async Task<IActionResult> GetBySupplierId([FromRoute] int id)
+        {
+            var response = await _productBs.GetByCategoryAsync(id, "Category", "Supplier");
+            return await SendResponse(response);
+        }
+
+        // GETBY SUPPLIER COMPANYNAME
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
+        [HttpGet("getbysupplier")]
+        public async Task<IActionResult> GetBySupplierCompany([FromBody] string supplierCompaynName)
+        {
+            var response = await _productBs.GetByCategoryAsync(supplierCompaynName, "Category", "Supplier");
+            return await SendResponse(response);
+        }
+
         // INSERT PRODUCT
         #region SWAGGER DOC
         [Produces("application/json", "text/plain")]

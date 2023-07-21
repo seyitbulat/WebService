@@ -7,14 +7,19 @@ namespace WS.DataAccsess.EF.Repositories
 {
     public class CategoryRepository : BaseRepository<Category, NorthwndContext>, ICategoryRepository
     {
+        public async Task<Category> GetByIdAsync(int id, params string[] includeList)
+        {
+            return await GetAsync(ctg => ctg.CategoryId == id, includeList);
+        }
+
         public async Task<List<Category>> GetByDescriptionAsync(string description, params string[] includeList)
         {
             return await GetAllAsync(ctg => ctg.Description.Contains(description), includeList);
         }
 
-        public async Task<Category> GetByIdAsync(int id, params string[] includeList)
+        public async Task<List<Category>> GetByNameAsync(string name, params string[] includeList)
         {
-            return await GetAsync(ctg => ctg.CategoryId == id, includeList);
+            return await GetAllAsync(ctg => ctg.CategoryName.ToLower() == name.ToLower());
         }
     }
 }

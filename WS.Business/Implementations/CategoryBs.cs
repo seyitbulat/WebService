@@ -22,11 +22,9 @@ namespace WS.Business.Implementations
 
         public async Task<ApiResponse<Category>> AddCategoryAsync(CategoryPostDto dto)
         {
-
-            var category = _mapper.Map<Category>(dto);
             if (dto == null)
                 throw new BadRequestException("Gonderilecek kategori bilgisi yollamalisiniz");
-
+            var category = _mapper.Map<Category>(dto);
             var insertedCategory = await _repo.InsertAsync(category);
             return ApiResponse<Category>.Success(200, insertedCategory);
 
@@ -72,6 +70,36 @@ namespace WS.Business.Implementations
             }
             throw new NotFoundException("Gosterilecek kategori bilgisi bulunamadi");
 
+        }
+
+        public async Task<ApiResponse<NoData>> UpdateCategoryAsync(CategoryPutDto dto)
+        {
+            if (dto == null)
+                throw new BadRequestException("Gonderilecek kategori bilgisi yollamalisiniz");
+
+            if (dto.CategoryId < 0)
+                throw new BadRequestException("Id negatif olamaz");
+
+            var category = _mapper.Map<Category>(dto);
+            await _repo.UpdateAsync(category);
+            return ApiResponse<NoData>.Success(StatusCodes.Status200OK);
+        }
+
+        public async Task<ApiResponse<NoData>> DeleteCategoryAsync(int id)
+        {
+            if (id == null)
+                throw new BadRequestException("Gönderilecek kategori bilgisi yollamalısınz");
+
+            if (id < 0)
+                throw new BadRequestException("Id negatif olamaz");
+
+            var category = await _repo.GetByIdAsync(id);
+            if(category != null)
+            {
+                await _repo.DeleteAsync(category);
+                return ApiResponse<NoData>.Success(StatusCodes.Status200OK);
+            }
+            throw new NotFoundException("Silinecek kategori bulunamadi");
         }
     }
 }
