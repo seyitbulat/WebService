@@ -6,10 +6,14 @@ namespace WS.Business.Interfaces
 {
     public interface ICategoryBs
     {
-        ApiResponse<List<CategoryGetDto>> GetCategories(params string[] includeList);
-        ApiResponse<List<CategoryGetDto>> GetByDescription(string desc, params string[] includeList);
-        ApiResponse<CategoryGetDto> GetById(int id, params string[] includeList);
+        Task<ApiResponse<CategoryGetDto>> GetByIdAsync(int id, params string[] includeList);
 
-        ApiResponse<Category> AddCategory(CategoryPostDto dto);
+        Task<ApiResponse<List<CategoryGetDto>>> GetCategoriesAsync(params string[] includeList);
+        Task<ApiResponse<List<CategoryGetDto>>> GetByDescriptionAsync(string desc, params string[] includeList);
+        
+        Task<ApiResponse<Category>> AddCategoryAsync(CategoryPostDto dto);
+        Task<ApiResponse<NoData>> UpdateCategoryAsync(CategoryPutDto dto);
+        Task<ApiResponse<NoData>> DeleteCategoryAsync(int id);
+
     }
 }

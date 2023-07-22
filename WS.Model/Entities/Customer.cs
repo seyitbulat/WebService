@@ -21,6 +21,6 @@ namespace WS.Model.Entities
         public string? Phone { get; set; }
         public string? Fax { get; set; }
 
-        
+        public List<Order> Orders { get; set; }
     }
 }

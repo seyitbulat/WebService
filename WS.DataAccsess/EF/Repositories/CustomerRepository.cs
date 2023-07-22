@@ -7,31 +7,31 @@ namespace WS.DataAccsess.EF.Repositories
 {
     public class CustomerRepository : BaseRepository<Customer, NorthwndContext>, ICustomerRepository
     {
-        public List<Customer> GetByCity(string city)
+        public async Task<List<Customer>> GetByCityAsync(string city)
         {
-            return GetAll(c => c.City == city);
+            return await GetAllAsync(c => c.City == city);
         }
 
-        public List<Customer> GetByCompanyName(string companyName)
+        public async Task<List<Customer>> GetByCompanyNameAsync(string companyName)
         {
-            return GetAll(c => c.CompanyName == companyName);
+            return await GetAllAsync(c => c.CompanyName == companyName);
         }
 
-        public List<Customer> GetByCountry(string country)
+        public async Task<List<Customer>> GetByCountryAsync(string country)
         {
-            return GetAll(c => c.Country == country);
+            return await GetAllAsync(c => c.Country == country);
         }
 
-        public Customer GetById(string id)
+        public async Task<Customer> GetByIdAsync(string id)
         {
-            return Get(c => c.CustomerId == id);
+            return await GetAsync(c => c.CustomerId == id);
         }
 
-        public List<Customer> GetByPhone(string phone)
+        public async Task<List<Customer>> GetByPhoneAsync(string phone)
         {
-            return GetAll(c => c.Phone == phone);
+            return await GetAllAsync(c => c.Phone == phone);
         }
 
-  
+
     }
 }

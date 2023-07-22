@@ -13,6 +13,10 @@ namespace WS.Model.Entities
         public string ProductName { get; set; }
         public decimal? UnitPrice { get; set; }
         public short? UnitsInStock { get; set; }
+        public string? QuantityPerUnit { get; set; }
+        public short? UnitsOnOrder { get; set; }
+        public short? ReorderLevel { get; set; }
+        public bool Discontinued { get; set; }
 
         //Navigation Property
         public Category? Category { get; set; }

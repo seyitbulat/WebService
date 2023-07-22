@@ -5,9 +5,9 @@ namespace WS.DataAccsess.Interfaces
 {
     public interface ISupplierRepository : IBaseRepository<Supplier>
     {
-        Supplier GetById(int id, params string[] includeList);
-        List<Supplier> GetByCity(string city, params string[] includeList);
-        List<Supplier> GetByCountry(string country, params string[] includeList);
-        List<Supplier> GetByCompanyName(string companyName, params string[] includeList);
+        Task<Supplier> GetByIdAsync(int id, params string[] includeList);
+        Task<List<Supplier>> GetByCityAsync(string city, params string[] includeList);
+        Task<List<Supplier>> GetByCountryAsync(string country, params string[] includeList);
+        Task<List<Supplier>> GetByCompanyNameAsync(string companyName, params string[] includeList);
     }
 }

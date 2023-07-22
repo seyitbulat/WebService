@@ -13,19 +13,19 @@ namespace WS.DataAccsess.EF.Repositories
 {
     public class ShipperRepository : BaseRepository<Shipper, NorthwndContext>, IShipperRepository
     {
-        public Shipper GetById(int id)
+        public async Task<Shipper> GetByIdAsync(int id)
         {
-            return Get(s => s.ShipperId == id);
+            return await GetAsync(s => s.ShipperId == id);
         }
 
-        public List<Shipper> GetByName(string name)
+        public async Task<List<Shipper>> GetByNameAsync(string name)
         {
-            return GetAll(s => s.CompanyName == name);
+            return await GetAllAsync(s => s.CompanyName == name);
         }
 
-        public List<Shipper> GetByPhone(string phone)
+        public async Task<List<Shipper>> GetByPhoneAsync(string phone)
         {
-            return GetAll(s => s.Phone == phone);
+            return await GetAllAsync(s => s.Phone == phone);
         }
     }
 }

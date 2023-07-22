@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Infrastructure.Utilities.ApiResponses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WS.Business.Interfaces;
+using WS.Model.Dtos.Category;
 using WS.Model.Dtos.Supplier;
 using WS.Model.Entities;
 
@@ -9,89 +11,96 @@ namespace WS.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SupplierssController : ControllerBase
+    public class SupplierssController : BaseController
     {
         private readonly ISupplierBs _supplierBs;
-        private readonly IMapper _mapper;
 
-        public SupplierssController(ISupplierBs supplierBs, IMapper mapper)
+        public SupplierssController(ISupplierBs supplierBs)
         {
             _supplierBs = supplierBs;
-            _mapper = mapper;
         }
 
+        // GETBY ID
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var supplier = _supplierBs.GetById(id);
-            if (supplier == null)
-                return NotFound();
-
-            var dto = _mapper.Map<SupplierGetDto>(supplier);
-            return Ok(dto);
+            var response = await _supplierBs.GetByIdAsync(id);
+            return await SendResponse(response);
         }
 
+        // GETALLS
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet]
-        public IActionResult GetSuppliers()
+        public async Task<IActionResult> GetSuppliers()
         {
-            List<Supplier> suppliers = _supplierBs.GetSuppliers();
-            if (suppliers.Count > 0)
-            {
-                var returnList = _mapper.Map<List<SupplierGetDto>>(suppliers);
-                return Ok(returnList);
-            }
-
-            return BadRequest();
+            var response = await _supplierBs.GetSuppliersAsync();
+            return await SendResponse(response);
         }
 
+        // GETBY CITY
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("getbycity")]
-        public IActionResult GetByCity([FromQuery] string city)
+        public async Task<IActionResult> GetByCity([FromQuery] string city)
         {
-            List<Supplier> suppliers = _supplierBs.GetByCity(city);
-            if (suppliers.Count > 0)
-            {
-                var returnList = _mapper.Map<List<SupplierGetDto>>(suppliers);
-                return Ok(returnList);
-            }
-
-            return BadRequest();
+            var response = await _supplierBs.GetByCityAsync(city);
+            return await SendResponse(response);
         }
 
+        // GETBY COUNTRY
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("getbycountry")]
-        public IActionResult GetByCountry([FromQuery] string country)
+        public async Task<IActionResult> GetByCountry([FromQuery] string country)
         {
-            List<Supplier> suppliers = _supplierBs.GetByCountry(country);
-            if (suppliers.Count > 0)
-            {
-                var returnList = _mapper.Map<List<SupplierGetDto>>(suppliers);
-                return Ok(returnList);
-            }
+            var response = await _supplierBs.GetByCountryAsync(country);
+            return await SendResponse(response);
 
-            return BadRequest();
         }
 
+        // GETBY COMPANY
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<SupplierGetDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
         [HttpGet("getbycompany")]
-        public IActionResult GetByCompany([FromQuery] string company)
+        public async Task<IActionResult> GetByCompany([FromQuery] string company)
         {
-            List<Supplier> suppliers = _supplierBs.GetByCompanyName(company);
-            if (suppliers.Count > 0)
-            {
-                var returnList = _mapper.Map<List<SupplierGetDto>>(suppliers);
-                return Ok(returnList);
-            }
-
-            return BadRequest();
+            var response = await _supplierBs.GetByCompanyNameAsync(company);
+            return await SendResponse(response);
         }
 
+        // INSERT SUPPLIER
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApiResponse<Supplier>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<Supplier>))]
+        #endregion
         [HttpPost]
-        public IActionResult SaveNewSupplier(SupplierPostDto dto)
+        public async Task<IActionResult> SaveNewSupplier(SupplierPostDto dto)
         {
-            if(dto == null)
-                return BadRequest();
-
-            var supplier = _mapper.Map<Supplier>(dto);
-            _supplierBs.SaveNewSupplier(supplier);
-            return CreatedAtAction(nameof(GetById), new Supplier { SupplierId = supplier.SupplierId}, supplier);
+            var response = await _supplierBs.AddSupplierAsync(dto);
+            return await SendResponse(response);
         }
     }
 }

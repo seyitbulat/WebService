@@ -22,148 +22,74 @@ namespace WS.Business.Implementations
             _mapper = mapper;
         }
 
-        public ApiResponse<CustomerGetDto> GetById(string id)
+        public async Task<ApiResponse<CustomerGetDto>> GetByIdAsync(string id)
         {
-            try
+            var customers = await _repo.GetByIdAsync(id);
+            if (customers != null)
             {
-                if (id != null)
-                {
-                    var customer = _repo.GetById(id);
-                    var dto = _mapper.Map<CustomerGetDto>(customer);
-                    return ApiResponse<CustomerGetDto>.Success(StatusCodes.Status200OK, dto);
-                }
-                throw new NotFoundException("Musteri bilgisi bulunamadi");
+                var dto = _mapper.Map<CustomerGetDto>(customers);
+                return ApiResponse<CustomerGetDto>.Success(StatusCodes.Status200OK, dto);
             }
-            catch (Exception ex)
-            {
-                if (ex is NotFoundException)
-                    return ApiResponse<CustomerGetDto>.Fail(StatusCodes.Status404NotFound, ex.Message);
-
-                return ApiResponse<CustomerGetDto>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            throw new NotFoundException("Icerik bulunamadi");
         }
 
-        public ApiResponse<Customer> AddCustomer(CustomerPostDto dto)
+        public async Task<ApiResponse<Customer>> AddCustomerAsync(CustomerPostDto dto)
         {
-            try
+            if (dto == null)
             {
-                if (dto == null)
-                    throw new BadRequestException("Eklenecek musteri bilgilerini giriniz");
-
-                var customer = _mapper.Map<Customer>(dto);
-                var insertedCustomer = _repo.Insert(customer);
-                return ApiResponse<Customer>.Success(StatusCodes.Status201Created);
+                throw new BadRequestException("Eklenecek musteri bilgilerini giriniz");
             }
-            catch (Exception ex)
-            {
-                if (ex is NotFoundException)
-                    return ApiResponse<Customer>.Fail(StatusCodes.Status404NotFound, ex.Message);
-
-                return ApiResponse<Customer>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
-
-            }
+            var customer = _mapper.Map<Customer>(dto);
+            var insertedCustomer = await _repo.InsertAsync(customer);
+            return ApiResponse<Customer>.Success(StatusCodes.Status201Created);
         }
 
-        public ApiResponse<List<CustomerGetDto>> GetByCity(string city)
+        public async Task<ApiResponse<List<CustomerGetDto>>> GetByCityAsync(string city)
         {
-            try
+            var customers = await _repo.GetByCityAsync(city);
+            if (customers != null && customers.Count > 0)
             {
-                if (city == null)
-                    throw new BadRequestException("Sehir bilgisi giriniz");
-                var customers = _repo.GetByCity(city);
-                if (customers != null && customers.Count > 0)
-                {
-                    var dtoList = _mapper.Map<List<CustomerGetDto>>(customers);
-                    return ApiResponse<List<CustomerGetDto>>.Success(StatusCodes.Status200OK, dtoList);
-                }
-                throw new NotFoundException("Musteri bulunamadi");
+                var dtoList = _mapper.Map<List<CustomerGetDto>>(customers);
+                return ApiResponse<List<CustomerGetDto>>.Success(StatusCodes.Status200OK, dtoList);
             }
-            catch (Exception ex)
-            {
-                if (ex is NotFoundException)
-                    return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status404NotFound, ex.Message);
+            throw new NotFoundException("Musteri bulunamadi");
 
-                if (ex is BadRequestException)
-                    return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status400BadRequest, ex.Message);
-
-                return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
-            }
         }
 
-        public ApiResponse<List<CustomerGetDto>> GetByCountry(string country)
+        public async Task<ApiResponse<List<CustomerGetDto>>> GetByCountryAsync(string country)
         {
-            try
+            var customers = await _repo.GetByCountryAsync(country);
+            if (customers != null && customers.Count > 0)
             {
-                if (country == null)
-                    throw new BadRequestException("Ulke bilgisi giriniz");
-                var customers = _repo.GetByCountry(country);
-                if (customers != null && customers.Count > 0)
-                {
-                    var dtoList = _mapper.Map<List<CustomerGetDto>>(customers);
-                    return ApiResponse<List<CustomerGetDto>>.Success(StatusCodes.Status200OK, dtoList);
-                }
-                throw new NotFoundException("Musteri bulunamadi");
+                var dtoList = _mapper.Map<List<CustomerGetDto>>(customers);
+                return ApiResponse<List<CustomerGetDto>>.Success(StatusCodes.Status200OK, dtoList);
             }
-            catch (Exception ex)
-            {
-                if (ex is NotFoundException)
-                    return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status404NotFound, ex.Message);
+            throw new NotFoundException("Musteri bulunamadi");
 
-                if (ex is BadRequestException)
-                    return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status400BadRequest, ex.Message);
-
-                return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
-            }
         }
 
-        public ApiResponse<List<CustomerGetDto>> GetByPhone(string phone)
+        public async Task<ApiResponse<List<CustomerGetDto>>> GetByPhoneAsync(string phone)
         {
-            try
+            var customers = await _repo.GetByPhoneAsync(phone);
+            if (customers != null && customers.Count > 0)
             {
-                if (phone == null)
-                    throw new BadRequestException("Telefon bilgisi giriniz");
-                var customers = _repo.GetByPhone(phone);
-                if (customers != null && customers.Count > 0)
-                {
-                    var dtoList = _mapper.Map<List<CustomerGetDto>>(customers);
-                    return ApiResponse<List<CustomerGetDto>>.Success(StatusCodes.Status200OK, dtoList);
-                }
-                throw new NotFoundException("Musteri bulunamadi");
+                var dtoList = _mapper.Map<List<CustomerGetDto>>(customers);
+                return ApiResponse<List<CustomerGetDto>>.Success(StatusCodes.Status200OK, dtoList);
             }
-            catch (Exception ex)
-            {
-                if (ex is NotFoundException)
-                    return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status404NotFound, ex.Message);
+            throw new NotFoundException("Musteri bulunamadi");
 
-                if (ex is BadRequestException)
-                    return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status400BadRequest, ex.Message);
-
-                return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
-            }
         }
 
-        public ApiResponse<List<CustomerGetDto>> GetCustomers()
+        public async Task<ApiResponse<List<CustomerGetDto>>> GetCustomersAsync()
         {
-            try
+            var customers = await _repo.GetAllAsync();
+            if (customers != null && customers.Count > 0)
             {
-                var customers = _repo.GetAll();
-                if (customers != null && customers.Count > 0)
-                {
-                    var dtoList = _mapper.Map<List<CustomerGetDto>>(customers);
-                    return ApiResponse<List<CustomerGetDto>>.Success(StatusCodes.Status200OK, dtoList);
-                }
-                throw new NotFoundException("Musteri bulunamadi");
+                var dtoList = _mapper.Map<List<CustomerGetDto>>(customers);
+                return ApiResponse<List<CustomerGetDto>>.Success(StatusCodes.Status200OK, dtoList);
             }
-            catch (Exception ex)
-            {
-                if (ex is NotFoundException)
-                    return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status404NotFound, ex.Message);
-
-                if (ex is BadRequestException)
-                    return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status400BadRequest, ex.Message);
-
-                return ApiResponse<List<CustomerGetDto>>.Fail(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            throw new NotFoundException("Musteri bulunamadi");
         }
+
     }
 }

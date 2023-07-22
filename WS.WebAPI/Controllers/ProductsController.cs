@@ -19,127 +19,164 @@ namespace WS.WebAPI.Controllers
         {
             _productBs = productBs;
         }
+
+        // GETBY ID
         #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ProductGetDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<ProductGetDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var response = _productBs.GetById(id, "Category", "Supplier");
+            var response = await _productBs.GetByIdAsync(id, "Category", "Supplier");
 
-            return SendRespone(response);
+            return await SendResponse(response);
         }
+
+        // GETALLS
         #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
         [HttpGet]
-        public IActionResult GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
-            #region MAPPING YONTEM 1
-            //var products = _productBs.GetProducts("Category");
 
-            //if (products.Count > 0)
-            //{
-            //    var returnList = new List<ProductGetDto>();
-            //    foreach (var product in products)
-            //    {
-            //        var dto = new ProductGetDto();
-            //        dto.ProductId = product.ProductId;
-            //        dto.ProductName = product.ProductName;
-            //        dto.CategoryName = product.Category.CategoryName;
-            //        dto.UnitPrice = product.UnitPrice;
-            //        dto.UnitsInStock = product.UnitsInStock;
 
-            //        returnList.Add(dto);
-            //    }
-            //   return Ok(returnList);
-            //}
+            var response = await _productBs.GetProductsAsync("Category", "Supplier");
+            return await SendResponse(response);
 
-            //return NotFound();
-            #endregion
-            #region MAPPING YONTEM 2
-            //var products = _productBs.GetProducts("Category");
-
-            //if (products.Count > 0)
-            //{
-            //    var returnList = products.Select(prd =>
-            //    new ProductGetDto()
-            //    {
-            //        ProductId = prd.ProductId,
-            //        ProductName = prd.ProductName,
-            //        UnitPrice = prd.UnitPrice,
-            //        CategoryName = prd.Category.CategoryName,
-            //        UnitsInStock = prd.UnitsInStock
-            //    }).ToList();
-            //    return Ok(returnList);
-            //}
-
-            //return NotFound();
-            #endregion
-            #region MAPPING YONTEM 3
-            var response = _productBs.GetProducts("Category", "Supplier");
-            return SendRespone(response);
-
-            //if (products.Count > 0)
-            //{
-            //    return Ok(response);
-            //}
-            //return NotFound();
-            #endregion
         }
 
+        // GETBY PRICE
         #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
         [HttpGet("getbyprice")]
-        public IActionResult GetByPrice([FromQuery] decimal min, [FromQuery] decimal max)
+        public async Task<IActionResult> GetByPrice([FromQuery] decimal min, [FromQuery] decimal max)
         {
-            var response = _productBs.GetByPriceRange(min, max, "Category", "Supplier");
-            return SendRespone(response);
+            var response = await _productBs.GetByPriceRangeAsync(min, max, "Category", "Supplier");
+            return await SendResponse(response);
 
         }
 
+        // GETBY STOCK
         #region SWAGGER DOC
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
         [HttpGet("getbystock")]
-        public IActionResult GetByStock([FromQuery] short min, [FromQuery] short max)
+        public async Task<IActionResult> GetByStock([FromQuery] short min, [FromQuery] short max)
         {
-            var response = _productBs.GetByStockRange(min, max, "Category", "Supplier");
+            var response = await _productBs.GetByStockRangeAsync(min, max, "Category", "Supplier");
 
-            return SendRespone(response);
+            return await SendResponse(response);
 
         }
 
+        // GETBY CATEGORY ID
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
+        [HttpGet("getbycategory/{id}")]
+        public async Task<IActionResult> GetByCategoryId([FromRoute] int id)
+        {
+            var response = await _productBs.GetByCategoryAsync(id, "Category", "Supplier");
+            return await SendResponse(response);
+        }
+
+        // GETBY CATEGORY NAME
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
+        [HttpGet("getbycategory")]
+        public async Task<IActionResult> GetByCategoryName([FromBody] string categoryName)
+        {
+            var response = await _productBs.GetByCategoryAsync(categoryName, "Category", "Supplier");
+            return await SendResponse(response);
+        }
+
+        // GETBY SUPPLIER ID
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
+        [HttpGet("getbysupplier/{id}")]
+        public async Task<IActionResult> GetBySupplierId([FromRoute] int id)
+        {
+            var response = await _productBs.GetByCategoryAsync(id, "Category", "Supplier");
+            return await SendResponse(response);
+        }
+
+        // GETBY SUPPLIER COMPANYNAME
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<List<ProductGetDto>>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        #endregion
+        [HttpGet("getbysupplier")]
+        public async Task<IActionResult> GetBySupplierCompany([FromBody] string supplierCompaynName)
+        {
+            var response = await _productBs.GetByCategoryAsync(supplierCompaynName, "Category", "Supplier");
+            return await SendResponse(response);
+        }
+
+        // INSERT PRODUCT
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApiResponse<Product>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<Product>))]
+        #endregion
         [HttpPost]
-        public IActionResult SaveNewProduct([FromBody] ProductPostDto dto)
+        public async Task<IActionResult> SaveNewProduct([FromBody] ProductPostDto dto)
         {
 
-            var response = _productBs.AddProduct(dto);
+            var response = await _productBs.AddProductAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = response.Data.ProductId }, response.Data);
         }
 
+        // UPDATE PRODUCT
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<NoData>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<NoData>))]
+        #endregion
         [HttpPut]
-        public IActionResult UpdateProduct([FromBody] ProductPutDto dto)
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductPutDto dto)
         {
-            var response = _productBs.UpdateProduct(dto);
-            return SendRespone(response);
+            var response = await _productBs.UpdateProductAsync(dto);
+            return await SendResponse(response);
         }
 
+        // DELETE PRODUCT
+        #region SWAGGER DOC
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<NoData>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<NoData>))]
+        #endregion
         [HttpDelete("{id}")]
-        public IActionResult DeleteProduct([FromRoute] int id)
+        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
-            var response = _productBs.GetById(id);
+            var response = await _productBs.GetByIdAsync(id);
 
-            return SendRespone(response);
+            return await SendResponse(response);
         }
     }
 }

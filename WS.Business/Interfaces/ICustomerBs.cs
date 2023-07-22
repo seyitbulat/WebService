@@ -7,12 +7,12 @@ namespace WS.Business.Interfaces
 {
     public interface ICustomerBs
     {
-        ApiResponse<List<CustomerGetDto>> GetCustomers();
-        ApiResponse<List<CustomerGetDto>> GetByCity(string city);
-        ApiResponse<List<CustomerGetDto>> GetByCountry(string country);
-        ApiResponse<List<CustomerGetDto>> GetByPhone(string phone);
-        ApiResponse<CustomerGetDto> GetById(string id);
+        Task<ApiResponse<List<CustomerGetDto>>> GetCustomersAsync();
+        Task<ApiResponse<List<CustomerGetDto>>> GetByCityAsync(string city);
+        Task<ApiResponse<List<CustomerGetDto>>> GetByCountryAsync(string country);
+        Task<ApiResponse<List<CustomerGetDto>>> GetByPhoneAsync(string phone);
+        Task<ApiResponse<CustomerGetDto>> GetByIdAsync(string id);
 
-        ApiResponse<Customer> AddCustomer(CustomerPostDto dto);
+        Task<ApiResponse<Customer>> AddCustomerAsync(CustomerPostDto dto);
     }
 }
